@@ -71,9 +71,13 @@ pub async fn is_lid_open() -> Result<bool, Error> {
 }
 
 pub async fn assign_workspace(id: u64, monitor: &str, default: bool) -> Result<(), Error> {
-    log_workspace_assignment(id, monitor, default);
+    let persistent = true;
+    let persistent_str = if persistent { ",persistent=true" } else { "" };
+    let default_str = if default { ",default=true" } else { "" };
 
-    let value = format!("{id},monitor:{monitor},persistent=true,default:{default}");
+    log_workspace_assignment(id, monitor, persistent, default);
+
+    let value = format!("{id},monitor:{monitor}{persistent_str}{default_str}");
 
     Command::new("hyprctl")
         .args(["keyword", "workspace", &value])
