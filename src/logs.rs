@@ -2,41 +2,41 @@
 
 pub const BOLD: &str = "\x1b[1m";
 
-pub const BG_BLUE: &str = "\x1b[104m";
-pub const BG_GREEN: &str = "\x1b[102m";
-pub const BG_MAGENTA: &str = "\x1b[105m";
-pub const BG_RED: &str = "\x1b[101m";
-pub const BG_YELLOW: &str = "\x1b[103m";
-pub const BG_WHITE: &str = "\x1b[107m";
-
-pub const BLACK: &str = "\x1b[90m";
+pub const BLUE: &str = "\x1b[94m";
+pub const CYAN: &str = "\x1b[96m";
+pub const GREEN: &str = "\x1b[92m";
+pub const MAGENTA: &str = "\x1b[95m";
+pub const RED: &str = "\x1b[91m";
+pub const YELLOW: &str = "\x1b[93m";
 
 pub const RESET: &str = "\x1b[0m";
 
 pub fn log_monitor_status(monitor: &str, enabled: bool) {
     if enabled {
-        println!("{BOLD}{BLACK}{BG_GREEN} {monitor:>5} {RESET}");
+        println!("{BOLD}{YELLOW}monitor{RESET}:{monitor}:{BOLD}{RED}disabled{RESET}");
     } else {
-        println!("{BOLD}{BLACK}{BG_RED} {monitor:>5} {RESET}");
+        println!("{BOLD}{YELLOW}monitor{RESET}:{monitor}:{BOLD}{GREEN}enabled{RESET}");
     }
 }
 
 pub fn log_workspace_assignment(id: u64, monitor: &str, default: bool) {
     let default_str = if default {
-        format!("{BG_YELLOW} default ")
+        format!("{BOLD}{CYAN}:default ")
     } else {
-        format!("{BG_WHITE}         ")
+        String::new()
     };
 
-    println!("{BOLD}{BLACK}{BG_GREEN} {monitor:>5} {BG_BLUE} WS {id:>02} {default_str}{RESET}");
+    println!(
+        "{BOLD}{YELLOW}monitor{RESET}:{monitor} {BOLD}{MAGENTA}workspace{RESET}:{id}{default_str}{RESET}"
+    );
 }
 
 pub fn log_workspace_move(id: u64, monitor: &str) {
     println!(
-        "{BOLD}{BLACK}{BG_GREEN} {monitor:>5} {BG_BLUE} WS {id:>02} {BG_YELLOW}   moved {RESET}"
+        "{BOLD}{YELLOW}monitor{RESET}:{monitor} {BOLD}{MAGENTA}workspace{RESET}:{id}:{BOLD}{BLUE}moved{RESET}"
     );
 }
 
 pub fn log_jump_to_workspace(id: u64) {
-    println!("{BOLD}{BLACK}{BG_MAGENTA} WS {id:>02} {RESET}");
+    println!("{BOLD}{MAGENTA}workspace{RESET}:{id}:{BOLD}{BLUE}selected{RESET}");
 }
