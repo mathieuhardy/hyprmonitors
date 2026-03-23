@@ -4,7 +4,7 @@ use tokio::process::Command;
 use crate::error::*;
 use crate::logs::*;
 
-pub async fn active_workspace_id() -> Result<Option<u64>, Error> {
+pub async fn active_workspace_id() -> Result<Option<usize>, Error> {
     let output = Command::new("hyprctl")
         .args(["activeworkspace", "-j"])
         .output()
@@ -13,7 +13,7 @@ pub async fn active_workspace_id() -> Result<Option<u64>, Error> {
     let json: Value = serde_json::from_slice(&output.stdout)?;
 
     let id = match json.get("id") {
-        Some(Value::Number(n)) => n.as_u64(),
+        Some(Value::Number(n)) => n.as_u64().map(|n| n as usize),
         _ => None,
     };
 
@@ -70,7 +70,7 @@ pub async fn is_lid_open() -> Result<bool, Error> {
     Ok(content.contains("open"))
 }
 
-pub async fn assign_workspace(id: u64, monitor: &str, default: bool) -> Result<(), Error> {
+pub async fn assign_workspace(id: usize, monitor: &str, default: bool) -> Result<(), Error> {
     let persistent = true;
     let persistent_str = if persistent { ",persistent:true" } else { "" };
     let default_str = if default { ",default:true" } else { "" };
@@ -113,7 +113,7 @@ pub async fn disable_monitor(monitor: &str) -> Result<(), Error> {
     Ok(())
 }
 
-pub async fn move_workspace_to_monitor(id: u64, monitor: &str) -> Result<(), Error> {
+pub async fn move_workspace_to_monitor(id: usize, monitor: &str) -> Result<(), Error> {
     log_workspace_move(id, monitor);
 
     Command::new("hyprctl")
@@ -129,7 +129,7 @@ pub async fn move_workspace_to_monitor(id: u64, monitor: &str) -> Result<(), Err
     Ok(())
 }
 
-pub async fn jump_to_workspace(id: u64) -> Result<(), Error> {
+pub async fn jump_to_workspace(id: usize) -> Result<(), Error> {
     log_jump_to_workspace(id);
 
     Command::new("hyprctl")

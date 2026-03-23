@@ -20,7 +20,7 @@ pub fn log_monitor_status(monitor: &str, enabled: bool) {
     }
 }
 
-pub fn log_workspace_assignment(id: u64, monitor: &str, persistent: bool, default: bool) {
+pub fn log_workspace_assignment(id: usize, monitor: &str, persistent: bool, default: bool) {
     let default_str = if default {
         format!("{BOLD}{CYAN}:default ")
     } else {
@@ -38,12 +38,12 @@ pub fn log_workspace_assignment(id: u64, monitor: &str, persistent: bool, defaul
     );
 }
 
-pub fn log_workspace_move(id: u64, monitor: &str) {
+pub fn log_workspace_move(id: usize, monitor: &str) {
     println!(
         "{BOLD}{YELLOW}monitor{RESET}:{monitor} {BOLD}{MAGENTA}workspace{RESET}:{id:>02}:{BOLD}{BLUE}moved{RESET}"
     );
 }
 
-pub fn log_jump_to_workspace(id: u64) {
+pub fn log_jump_to_workspace(id: usize) {
     println!("{BOLD}{MAGENTA}workspace{RESET}:{id:>02}:{BOLD}{BLUE}selected{RESET}");
 }

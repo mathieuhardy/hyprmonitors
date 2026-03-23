@@ -7,4 +7,7 @@ pub enum Error {
 
     #[error(transparent)]
     IO(#[from] std::io::Error),
+
+    #[error(transparent)]
+    Toml(#[from] toml::de::Error),
 }

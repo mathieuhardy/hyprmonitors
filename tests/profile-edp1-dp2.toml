@@ -1,0 +1,9 @@
+[[monitors]]
+name = "eDP-1"
+workspaces = [10]
+default_workspace = 10
+
+[[monitors]]
+name = "DP-2"
+workspaces = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+default_workspace = 1
