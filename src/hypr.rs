@@ -72,8 +72,8 @@ pub async fn is_lid_open() -> Result<bool, Error> {
 
 pub async fn assign_workspace(id: u64, monitor: &str, default: bool) -> Result<(), Error> {
     let persistent = true;
-    let persistent_str = if persistent { ",persistent=true" } else { "" };
-    let default_str = if default { ",default=true" } else { "" };
+    let persistent_str = if persistent { ",persistent:true" } else { "" };
+    let default_str = if default { ",default:true" } else { "" };
 
     log_workspace_assignment(id, monitor, persistent, default);
 
