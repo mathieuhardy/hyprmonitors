@@ -15,7 +15,7 @@ async fn main() -> Result<(), Error> {
     match (
         internal_monitor_name.clone(),
         is_lid_open,
-        external_monitors_names.get(0),
+        external_monitors_names.first(),
     ) {
         // - Internal monitor found
         // - Lid opened

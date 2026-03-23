@@ -6,7 +6,7 @@ use crate::logs::*;
 
 pub async fn active_workspace_id() -> Result<Option<u64>, Error> {
     let output = Command::new("hyprctl")
-        .args(&["activeworkspace", "-j"])
+        .args(["activeworkspace", "-j"])
         .output()
         .await?;
 
@@ -22,7 +22,7 @@ pub async fn active_workspace_id() -> Result<Option<u64>, Error> {
 
 pub async fn internal_monitor_name() -> Result<Option<String>, Error> {
     let output = Command::new("hyprctl")
-        .args(&["monitors", "all", "-j"])
+        .args(["monitors", "all", "-j"])
         .output()
         .await?;
 
@@ -46,24 +46,20 @@ pub async fn internal_monitor_name() -> Result<Option<String>, Error> {
 
 pub async fn external_monitors_names() -> Result<Vec<String>, Error> {
     let output = Command::new("hyprctl")
-        .args(&["monitors", "-j"])
+        .args(["monitors", "-j"])
         .output()
         .await?;
 
     let json: Value = serde_json::from_slice(&output.stdout)?;
     let mut names = Vec::new();
 
-    match json {
-        Value::Array(monitors) => {
-            for monitor in monitors {
-                let name = monitor["name"].as_str().unwrap_or_default();
-                if !name.is_empty() && !name.starts_with("eDP") {
-                    names.push(name.to_string());
-                }
+    if let Value::Array(monitors) = json {
+        for monitor in monitors {
+            let name = monitor["name"].as_str().unwrap_or_default();
+            if !name.is_empty() && !name.starts_with("eDP") {
+                names.push(name.to_string());
             }
         }
-
-        _ => (),
     };
 
     Ok(names)
@@ -80,7 +76,7 @@ pub async fn assign_workspace(id: u64, monitor: &str, default: bool) -> Result<(
     let value = format!("{id},monitor:{monitor},persistent=true,default:{default}");
 
     Command::new("hyprctl")
-        .args(&["keyword", "workspace", &value])
+        .args(["keyword", "workspace", &value])
         .output()
         .await?;
 
@@ -93,7 +89,7 @@ pub async fn enable_monitor(monitor: &str) -> Result<(), Error> {
     let value = format!("{monitor},preferred,auto,1");
 
     Command::new("hyprctl")
-        .args(&["keyword", "monitor", &value])
+        .args(["keyword", "monitor", &value])
         .output()
         .await?;
 
@@ -106,7 +102,7 @@ pub async fn disable_monitor(monitor: &str) -> Result<(), Error> {
     let value = format!("{monitor},disable");
 
     Command::new("hyprctl")
-        .args(&["keyword", "monitor", &value])
+        .args(["keyword", "monitor", &value])
         .output()
         .await?;
 
@@ -117,11 +113,11 @@ pub async fn move_workspace_to_monitor(id: u64, monitor: &str) -> Result<(), Err
     log_workspace_move(id, monitor);
 
     Command::new("hyprctl")
-        .args(&[
+        .args([
             "dispatch",
             "moveworkspacetomonitor",
             &format!("{id}"),
-            &format!("{monitor}"),
+            monitor,
         ])
         .output()
         .await?;
@@ -133,7 +129,7 @@ pub async fn jump_to_workspace(id: u64) -> Result<(), Error> {
     log_jump_to_workspace(id);
 
     Command::new("hyprctl")
-        .args(&["dispatch", "workspace", &format!("{id}")])
+        .args(["dispatch", "workspace", &format!("{id}")])
         .output()
         .await?;
 
