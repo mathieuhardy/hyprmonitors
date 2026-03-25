@@ -1,14 +1,11 @@
-mod error;
-mod hypr;
-mod logs;
 mod options;
-mod profile;
 
 use clap::Parser;
 
-use error::*;
+use common::error::*;
+use common::profile::*;
+
 use options::*;
-use profile::*;
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {

@@ -1,7 +1,7 @@
 use serde::Deserialize;
 
 use crate::error::*;
-use crate::hypr::*;
+use crate::hyprland::*;
 
 #[derive(Deserialize)]
 pub struct Monitor {

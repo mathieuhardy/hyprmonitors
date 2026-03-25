@@ -105,6 +105,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1d07550c9036bf2ae0c684c4297d503f838287c83c53686d05370d0e139ae570"
 
 [[package]]
+name = "common"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
+ "thiserror",
+ "tokio",
+ "toml",
+]
+
+[[package]]
 name = "equivalent"
 version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -137,11 +148,8 @@ name = "hyprmonitors"
 version = "0.1.0"
 dependencies = [
  "clap",
- "serde",
- "serde_json",
- "thiserror",
+ "common",
  "tokio",
- "toml",
 ]
 
 [[package]]
