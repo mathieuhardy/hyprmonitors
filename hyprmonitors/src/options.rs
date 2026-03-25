@@ -9,4 +9,7 @@ use clap::Parser;
 pub struct Options {
     #[arg(short = 'p', long, value_name = "PROFILE_PATH")]
     pub profile: Option<PathBuf>,
+
+    #[arg(short = 'v', long, action = clap::ArgAction::Count)]
+    pub verbose: u8,
 }
