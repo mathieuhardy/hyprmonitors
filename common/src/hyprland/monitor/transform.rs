@@ -1,8 +1,6 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Deserialize, Serialize)]
-// TODO:remove
-//#[serde(rename_all = "PascalCase")]
 pub enum MonitorTransform {
     #[default]
     Normal,

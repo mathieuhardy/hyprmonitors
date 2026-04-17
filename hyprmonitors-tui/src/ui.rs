@@ -16,6 +16,7 @@ pub struct UserInterface {
     mirror_picker_view: mirror_picker::MirrorPickerView,
     resolution_picker_view: resolution_picker::ResolutionPickerView,
     profile_input_view: profile_input::ProfileInputView,
+    profile_picker_view: profile_picker::ProfilePickerView,
     scale_picker_view: scale_picker::ScalePickerView,
     workspace_assign_view: workspace_assign::WorkspaceAssignView,
 }
@@ -30,6 +31,7 @@ impl UserInterface {
             mirror_picker_view: mirror_picker::MirrorPickerView::new(),
             resolution_picker_view: resolution_picker::ResolutionPickerView::new(),
             profile_input_view: profile_input::ProfileInputView::new(),
+            profile_picker_view: profile_picker::ProfilePickerView::new(),
             scale_picker_view: scale_picker::ScalePickerView::new(),
             workspace_assign_view: workspace_assign::WorkspaceAssignView::new(),
         }
@@ -39,16 +41,17 @@ impl UserInterface {
         self.active_view = view;
     }
 
-    pub fn reset(&mut self, state: &State) {
+    pub async fn reset(&mut self, state: &State) {
         match self.active_view {
-            ActiveView::AdvancedSettings => self.advanced_settings_view.reset(state),
-            ActiveView::Help => self.help_view.reset(state),
-            ActiveView::Main => self.main_view.reset(state),
-            ActiveView::MirrorPicker => self.mirror_picker_view.reset(state),
-            ActiveView::ProfileInput => self.profile_input_view.reset(state),
-            ActiveView::ResolutionPicker => self.resolution_picker_view.reset(state),
-            ActiveView::ScalePicker => self.scale_picker_view.reset(state),
-            ActiveView::WorkspaceAssign => self.workspace_assign_view.reset(state),
+            ActiveView::AdvancedSettings => self.advanced_settings_view.reset(state).await,
+            ActiveView::Help => self.help_view.reset(state).await,
+            ActiveView::Main => self.main_view.reset(state).await,
+            ActiveView::MirrorPicker => self.mirror_picker_view.reset(state).await,
+            ActiveView::ProfileInput => self.profile_input_view.reset(state).await,
+            ActiveView::ProfilePicker => self.profile_picker_view.reset(state).await,
+            ActiveView::ResolutionPicker => self.resolution_picker_view.reset(state).await,
+            ActiveView::ScalePicker => self.scale_picker_view.reset(state).await,
+            ActiveView::WorkspaceAssign => self.workspace_assign_view.reset(state).await,
         }
     }
 
@@ -59,6 +62,7 @@ impl UserInterface {
             ActiveView::Main => self.main_view.render(frame, state),
             ActiveView::MirrorPicker => self.mirror_picker_view.render(frame, state),
             ActiveView::ProfileInput => self.profile_input_view.render(frame, state),
+            ActiveView::ProfilePicker => self.profile_picker_view.render(frame, state),
             ActiveView::ResolutionPicker => self.resolution_picker_view.render(frame, state),
             ActiveView::ScalePicker => self.scale_picker_view.render(frame, state),
             ActiveView::WorkspaceAssign => self.workspace_assign_view.render(frame, state),
@@ -96,6 +100,7 @@ impl UserInterface {
             ActiveView::Main => self.main_view.handle_key(key, state).await,
             ActiveView::MirrorPicker => self.mirror_picker_view.handle_key(key, state).await,
             ActiveView::ProfileInput => self.profile_input_view.handle_key(key, state).await,
+            ActiveView::ProfilePicker => self.profile_picker_view.handle_key(key, state).await,
             ActiveView::ResolutionPicker => {
                 self.resolution_picker_view.handle_key(key, state).await
             }

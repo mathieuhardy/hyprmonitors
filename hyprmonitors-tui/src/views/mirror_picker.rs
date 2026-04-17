@@ -21,7 +21,7 @@ impl MirrorPickerView {
 }
 
 impl View for MirrorPickerView {
-    fn reset(&mut self, _state: &State) {
+    async fn reset(&mut self, _state: &State) {
         self.cursor_position = 0;
     }
 

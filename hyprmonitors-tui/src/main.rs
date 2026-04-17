@@ -79,7 +79,7 @@ async fn run_state(
 
                 Action::ChangeView(view) => {
                     ui.set_active_view(view);
-                    ui.reset(state);
+                    ui.reset(state).await;
                 }
 
                 _ => {}

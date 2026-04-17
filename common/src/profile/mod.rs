@@ -8,7 +8,7 @@ use std::path::PathBuf;
 use crate::error::*;
 use crate::hyprland::*;
 
-#[derive(Clone, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Profile {
     pub monitors: Vec<Monitor>,
 
@@ -39,14 +39,14 @@ impl Profile {
         })
     }
 
-    pub async fn apply(&self, verbose: bool) -> Result<(), Error> {
+    pub async fn apply(&self, logs: bool, verbose: bool) -> Result<(), Error> {
         // Disable monitors
         for monitor in &self.monitors {
             if monitor.active {
                 continue;
             }
 
-            HyprMonitor::disable(&monitor.name, verbose).await?;
+            HyprMonitor::disable(&monitor.name, logs, verbose).await?;
         }
 
         // Assign workspaces to enabled monitors
@@ -62,7 +62,7 @@ impl Profile {
                     false
                 };
 
-                assign_workspace(*workspace, &monitor.name, is_default, verbose).await?;
+                assign_workspace(*workspace, &monitor.name, is_default, logs, verbose).await?;
             }
         }
 
@@ -72,7 +72,7 @@ impl Profile {
                 continue;
             }
 
-            HyprMonitor::enable(&monitor.name, verbose).await?;
+            HyprMonitor::enable(&monitor.name, &monitor.to_string(), logs, verbose).await?;
         }
 
         // Move workspaces to enabled monitors
@@ -82,13 +82,13 @@ impl Profile {
             }
 
             for workspace in &monitor.workspaces {
-                move_workspace_to_monitor(*workspace, &monitor.name, verbose).await?;
+                move_workspace_to_monitor(*workspace, &monitor.name, logs, verbose).await?;
             }
         }
 
         // Jump back to workspace
         if let Some(workspace_id) = self.current_workspace_id {
-            jump_to_workspace(workspace_id, verbose).await?;
+            jump_to_workspace(workspace_id, logs, verbose).await?;
         }
 
         Ok(())

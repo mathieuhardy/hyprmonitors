@@ -3,6 +3,7 @@ pub mod help;
 pub mod main;
 pub mod mirror_picker;
 pub mod profile_input;
+pub mod profile_picker;
 pub mod resolution_picker;
 pub mod scale_picker;
 pub mod workspace_assign;
@@ -26,13 +27,14 @@ pub enum ActiveView {
     Main,
     MirrorPicker,
     ProfileInput,
+    ProfilePicker,
     ResolutionPicker,
     ScalePicker,
     WorkspaceAssign,
 }
 
 pub trait View {
-    fn reset(&mut self, state: &State);
+    async fn reset(&mut self, state: &State);
     fn render(&self, frame: &mut Frame, state: &mut State);
     async fn handle_key(&mut self, key: KeyEvent, state: &mut State) -> Result<Action, Error>;
 }

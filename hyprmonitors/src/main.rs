@@ -16,11 +16,12 @@ async fn main() -> Result<(), Error> {
     match opts.profile {
         Some(path) => {
             let profile = Profile::from_path(&path).await?;
-            profile.apply(is_verbose).await?;
+            profile.apply(true, is_verbose).await?;
         }
 
         None => {
             let profiles = load_profiles().await?;
+
             let current_monitors: Vec<Monitor> = HyprMonitor::get_all()
                 .await?
                 .into_iter()
@@ -33,8 +34,10 @@ async fn main() -> Result<(), Error> {
                     let mut score = 0;
 
                     for monitor in &current_monitors {
-                        if profile.monitors.iter().any(|m| m.name == monitor.name) {
-                            score += 1;
+                        if let Some(m) = profile.monitors.iter().find(|m| m.uniq == monitor.uniq) {
+                            if m.active == monitor.active {
+                                score += 1;
+                            }
                         }
                     }
 
@@ -44,8 +47,8 @@ async fn main() -> Result<(), Error> {
 
             profiles_ranked.sort_by(|a, b| b.0.cmp(&a.0));
 
-            if let Some((_, profile)) = profiles_ranked.last() {
-                profile.apply(is_verbose).await?;
+            if let Some((_, profile)) = profiles_ranked.first() {
+                profile.apply(true, is_verbose).await?;
             }
         }
     }

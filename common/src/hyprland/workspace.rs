@@ -45,13 +45,16 @@ pub async fn assign_workspace(
     id: usize,
     monitor: &str,
     default: bool,
+    logs: bool,
     verbose: bool,
 ) -> Result<(), Error> {
     let persistent = true;
     let persistent_str = if persistent { ",persistent:true" } else { "" };
     let default_str = if default { ",default:true" } else { "" };
 
-    log_workspace_assignment(id, monitor, persistent, default);
+    if logs {
+        log_workspace_assignment(id, monitor, persistent, default);
+    }
 
     let value = format!("{id},monitor:{monitor}{persistent_str}{default_str}");
 
@@ -70,9 +73,12 @@ pub async fn assign_workspace(
 pub async fn move_workspace_to_monitor(
     id: usize,
     monitor: &str,
+    logs: bool,
     verbose: bool,
 ) -> Result<(), Error> {
-    log_workspace_move(id, monitor);
+    if logs {
+        log_workspace_move(id, monitor);
+    }
 
     if verbose {
         println!("hyprctl dispatch moveworkspacetomonitor {id} {monitor}");
@@ -91,8 +97,10 @@ pub async fn move_workspace_to_monitor(
     Ok(())
 }
 
-pub async fn jump_to_workspace(id: usize, verbose: bool) -> Result<(), Error> {
-    log_jump_to_workspace(id);
+pub async fn jump_to_workspace(id: usize, logs: bool, verbose: bool) -> Result<(), Error> {
+    if logs {
+        log_jump_to_workspace(id);
+    }
 
     if verbose {
         println!("hyprctl dispatch workspace {id}");

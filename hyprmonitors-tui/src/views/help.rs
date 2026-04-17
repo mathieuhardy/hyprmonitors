@@ -22,7 +22,7 @@ impl HelpView {
 }
 
 impl View for HelpView {
-    fn reset(&mut self, _state: &State) {
+    async fn reset(&mut self, _state: &State) {
         self.scroll = 0
     }
 
@@ -55,6 +55,7 @@ impl View for HelpView {
             Line::from("  R                  Open resolution/refresh rate picker"),
             Line::from("  M                  Open mirror configuration"),
             Line::from("  A                  Open advanced display settings"),
+            Line::from("  P                  Open profile picker"),
             Line::from("  Ctrl+↑↓            Decrease/increase scale by 0.05"),
             Line::from(""),
             Line::from(Span::styled(
@@ -114,7 +115,7 @@ impl View for HelpView {
 
         match key.code {
             KeyCode::Esc | KeyCode::Char('?') => {
-                self.reset(state);
+                self.reset(state).await;
                 action = Action::ChangeView(ActiveView::Main);
             }
 

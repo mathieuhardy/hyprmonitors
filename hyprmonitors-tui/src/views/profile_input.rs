@@ -26,7 +26,7 @@ impl ProfileInputView {
 }
 
 impl View for ProfileInputView {
-    fn reset(&mut self, _state: &State) {
+    async fn reset(&mut self, _state: &State) {
         self.input = String::new();
     }
 

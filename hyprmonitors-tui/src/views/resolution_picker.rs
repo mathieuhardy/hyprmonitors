@@ -21,7 +21,7 @@ impl ResolutionPickerView {
 }
 
 impl View for ResolutionPickerView {
-    fn reset(&mut self, _state: &State) {
+    async fn reset(&mut self, _state: &State) {
         self.cursor_position = 0;
     }
 

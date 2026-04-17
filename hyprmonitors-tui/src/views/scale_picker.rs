@@ -23,7 +23,7 @@ impl ScalePickerView {
 }
 
 impl View for ScalePickerView {
-    fn reset(&mut self, state: &State) {
+    async fn reset(&mut self, state: &State) {
         let scale = state.monitor_scale();
 
         self.cursor_position = SCALE_OPTIONS

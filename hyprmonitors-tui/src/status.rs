@@ -17,6 +17,7 @@ pub enum Status {
     Resolution(Resolution),
     MonitorsLoaded(usize),
     MonitorState(String, bool),
+    ProfileLoaded(String),
     ProfileSaved(String),
     Scale(f64),
     Snap(SnapMode),
@@ -50,6 +51,7 @@ impl Display for Status {
             Status::MonitorState(name, state) => {
                 write!(f, "{name} {}", if *state { "enabled" } else { "disabled" })
             }
+            Status::ProfileLoaded(name) => write!(f, "Profile {name} loaded"),
             Status::ProfileSaved(name) => write!(f, "Profile {name} saved"),
             Status::Scale(value) => write!(f, "Scale: {value:.2}"),
             Status::Snap(value) => write!(f, "Snap: {value}"),

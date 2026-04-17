@@ -37,7 +37,7 @@ impl WorkspaceAssignView {
 }
 
 impl View for WorkspaceAssignView {
-    fn reset(&mut self, state: &State) {
+    async fn reset(&mut self, state: &State) {
         self.input = state.workspaces_as_str();
     }
 

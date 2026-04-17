@@ -41,54 +41,43 @@ impl HyprMonitor {
             .output()
             .await?;
 
-        let monitors: Vec<HyprMonitor> = serde_json::from_slice(output.stdout.as_slice())?;
+        let mut monitors: Vec<HyprMonitor> = serde_json::from_slice(output.stdout.as_slice())?;
+
+        for monitor in &mut monitors {
+            if monitor.name.starts_with("eDP") && !is_lid_open().await? {
+                monitor.disabled = true;
+            }
+        }
+
         Ok(monitors)
     }
 
-    pub async fn get_internal() -> Result<Option<HyprMonitor>, Error> {
-        let monitors = HyprMonitor::get_all().await?;
-
-        for monitor in monitors {
-            if monitor.name.starts_with("eDP") {
-                return Ok(Some(monitor));
-            }
+    pub async fn enable(
+        monitor: &str,
+        config: &str,
+        logs: bool,
+        verbose: bool,
+    ) -> Result<(), Error> {
+        if logs {
+            log_monitor_status(monitor, true);
         }
-
-        Ok(None)
-    }
-
-    pub async fn get_externals() -> Result<Vec<HyprMonitor>, Error> {
-        let mut names = Vec::new();
-        let monitors = HyprMonitor::get_all().await?;
-
-        for monitor in monitors {
-            if !monitor.name.starts_with("eDP") {
-                names.push(monitor);
-            }
-        }
-
-        Ok(names)
-    }
-
-    pub async fn enable(monitor: &str, verbose: bool) -> Result<(), Error> {
-        log_monitor_status(monitor, true);
-
-        let value = format!("{monitor},preferred,auto,1");
 
         if verbose {
-            println!("hyprctl keyword monitor {value}");
+            println!("hyprctl keyword monitor {config}");
         }
 
         Command::new("hyprctl")
-            .args(["keyword", "monitor", &value])
+            .args(["keyword", "monitor", config])
             .output()
             .await?;
 
         Ok(())
     }
 
-    pub async fn disable(monitor: &str, verbose: bool) -> Result<(), Error> {
-        log_monitor_status(monitor, false);
+    pub async fn disable(monitor: &str, logs: bool, verbose: bool) -> Result<(), Error> {
+        if logs {
+            log_monitor_status(monitor, false);
+        }
 
         let value = format!("{monitor},disable");
 
@@ -103,9 +92,9 @@ impl HyprMonitor {
 
         Ok(())
     }
+}
 
-    pub async fn is_lid_open() -> Result<bool, Error> {
-        let content = tokio::fs::read_to_string("/proc/acpi/button/lid/LID/state").await?;
-        Ok(content.contains("open"))
-    }
+pub async fn is_lid_open() -> Result<bool, Error> {
+    let content = tokio::fs::read_to_string("/proc/acpi/button/lid/LID/state").await?;
+    Ok(content.contains("open"))
 }

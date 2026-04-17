@@ -35,7 +35,6 @@ struct DragState {
 }
 
 pub struct State {
-    profiles: Vec<Profile>,
     profile: Profile,
     previous_profile: Option<Profile>,
     selected: usize,
@@ -58,7 +57,6 @@ pub struct State {
 impl State {
     pub async fn new(term_width: u16, term_height: u16) -> Result<Self, Error> {
         let mut state = Self {
-            profiles: load_profiles().await?,
             profile: Profile::new().await?,
             previous_profile: None,
             selected: 0,
@@ -86,6 +84,17 @@ impl State {
     pub fn resize(&mut self, term_width: u16, term_height: u16) {
         self.term_width = term_width;
         self.term_height = term_height;
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Profiles
+    // ─────────────────────────────────────────────────────────────────────────
+
+    pub fn set_profile(&mut self, profile: Profile) {
+        self.profile = profile;
+        self.selected = 0;
+        self.previous_profile = None;
+        self.update_world();
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -539,7 +548,7 @@ impl State {
     // ─────────────────────────────────────────────────────────────────────────
 
     pub async fn apply_configuration(&self) -> Result<(), Error> {
-        self.profile.apply(false).await
+        self.profile.apply(false, false).await
     }
 
     pub async fn save_configuration(&self) -> Result<String, Error> {

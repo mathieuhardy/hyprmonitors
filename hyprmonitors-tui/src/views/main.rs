@@ -23,7 +23,7 @@ impl MainView {
 }
 
 impl View for MainView {
-    fn reset(&mut self, _state: &State) {}
+    async fn reset(&mut self, _state: &State) {}
 
     fn render(&self, frame: &mut Frame, state: &mut State) {
         let area = frame.area();
@@ -112,6 +112,10 @@ impl View for MainView {
 
             KeyCode::Char('w') | KeyCode::Char('W') => {
                 action = Action::ChangeView(ActiveView::WorkspaceAssign);
+            }
+
+            KeyCode::Char('p') | KeyCode::Char('P') => {
+                action = Action::ChangeView(ActiveView::ProfilePicker);
             }
 
             // Actions
@@ -375,7 +379,7 @@ fn render_footer(frame: &mut Frame, state: &State, area: Rect) {
     );
 
     // Command helper
-    let keys = " ←↑↓→ Move │ Tab Sel │ G Grid │ S Snap │ L Scale │ R Mode │ M Mirror │ A Adv │ W Workspaces │ F1 Apply │ F2 Save │ F3 Save to profile │ C+Z Revert │ ? Help │ Q Quit";
+    let keys = " F1 Apply │ F2 Save │ F3 Save as | P Profiles │ G Grid │ S Snap │ L Scale │ R Resolution │ M Mirror │ A Adv │ W Workspaces │ C+Z Revert │ ? Help │ Q Quit";
 
     frame.render_widget(
         Paragraph::new(keys).style(Style::default().fg(C_LIGHT_GREY)),

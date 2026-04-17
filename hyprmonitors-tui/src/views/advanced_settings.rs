@@ -34,7 +34,7 @@ impl AdvanceSettingsView {
 }
 
 impl View for AdvanceSettingsView {
-    fn reset(&mut self, _state: &State) {
+    async fn reset(&mut self, _state: &State) {
         self.field = 0
     }
 

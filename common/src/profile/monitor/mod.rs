@@ -76,7 +76,6 @@ impl From<HyprMonitor> for Monitor {
 }
 
 impl std::fmt::Display for Monitor {
-    // TODO: use other parameter than name to identify a monitor
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         if !self.active {
             return write!(f, "{name},disable", name = self.name);
@@ -90,7 +89,7 @@ impl std::fmt::Display for Monitor {
         if self.is_mirrored && !self.mirror_source.is_empty() {
             return write!(
                 f,
-                "{name},{resolution_opts}{position_opts}{scale_opts}{mirror_opts}",
+                "{name}{resolution_opts}{position_opts}{scale_opts}{mirror_opts}",
                 name = self.name,
             );
         }
@@ -98,7 +97,7 @@ impl std::fmt::Display for Monitor {
         let advanced_opts = self.advanced.to_string();
 
         let output = format!(
-            "{name},{resolution_opts}{position_opts}{scale_opts}{advanced_opts}",
+            "{name}{resolution_opts}{position_opts}{scale_opts}{advanced_opts}",
             name = self.name,
         );
 
