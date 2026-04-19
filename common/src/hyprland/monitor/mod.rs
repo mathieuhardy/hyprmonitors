@@ -44,8 +44,8 @@ impl HyprMonitor {
         let mut monitors: Vec<HyprMonitor> = serde_json::from_slice(output.stdout.as_slice())?;
 
         for monitor in &mut monitors {
-            if monitor.name.starts_with("eDP") && !is_lid_open().await? {
-                monitor.disabled = true;
+            if monitor.name.starts_with("eDP") {
+                monitor.disabled = !is_lid_open().await?;
             }
         }
 
